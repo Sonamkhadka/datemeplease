@@ -83,7 +83,7 @@ If you previously set up a custom domain and want to use the default `github.io`
    git push
    ```
 5. Wait a few minutes for changes to propagate
-6. Your site will be available at: `https://sonamkhadka.github.io/ValentineAPP/`
+6. Your site will be available at: `https://sonamkhadka.github.io/datemepleaseP/`
 
 > ⚠️ DNS changes may take up to 24 hours to fully propagate.
 </details>
@@ -135,7 +135,7 @@ const config = {
         { text: "💕 Initializing DateMePlease kernel...", type: "loading" },
         // ... more logs
     ],
-    
+
     noTexts: [
         // Change guilt-trip messages
         "No 💔",
@@ -143,7 +143,7 @@ const config = {
         "Really sure? 💔",
         // ... more messages
     ],
-    
+
     questionVariations: [
         // Change the question variants
         "Will you be my Valentine?",
@@ -198,7 +198,7 @@ sounds: {
 ## 📂 Project Structure
 
 ```
-ValentineApp/
+datemepleasep/
 ├── index.html          # Main HTML structure
 ├── style.css           # All styling and animations
 ├── script.js           # Game logic and interactions
@@ -248,8 +248,8 @@ Want to contribute or run this locally? Here's how:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Sonamkhadka/ValentineAPP.git
-cd ValentineAPP
+git clone https://github.com/Sonamkhadka/datemepleaseP.git
+cd datemepleaseP
 
 # Open in browser (macOS)
 open index.html
@@ -265,7 +265,7 @@ No build step needed! It's pure HTML/CSS/JS.
 ### Project Structure Explained
 
 ```
-ValentineApp/
+datemepleasep/
 ├── index.html      # All UI screens (boot, captcha, question, etc.)
 ├── style.css       # Animations, gradients, responsive design
 ├── script.js       # Game logic: evasion, confetti, screen transitions

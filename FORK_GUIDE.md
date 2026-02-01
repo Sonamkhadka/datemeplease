@@ -39,7 +39,7 @@ Want to create your own DateMePlease proposal? Here's the fastest way!
 3. Commit changes
 
 ### Step 4: Get Your Link
-- Your site will be at: `https://sonamkhadka.github.io/ValentineAPP/`
+- Your site will be at: `https://sonamkhadka.github.io/datemeplease/`
 - (Replace `sonamkhadka` with your GitHub username)
 
 ### Optional: Use a Custom Domain (e.g., datemeplease.com.au)
