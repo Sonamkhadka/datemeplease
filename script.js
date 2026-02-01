@@ -41,7 +41,10 @@ const config = {
         noSequence: [
             "https://www.myinstants.com/media/sounds/vine-boom-sound-effect_KT89XIq.mp3", // Thud
             "https://www.myinstants.com/media/sounds/spongebob-fail.mp3", // SpongeBob Fail
-            "https://www.myinstants.com/media/sounds/fahhhhhhhhhhhhhh.mp3" // Fahhh
+            "https://www.myinstants.com/media/sounds/fahhhhhhhhhhhhhh.mp3", // Fahhh
+            "https://www.myinstants.com/media/sounds/movie_1.mp3", // Bruh
+            "https://www.myinstants.com/media/sounds/sad-trombone.mp3", // Sad Trombone
+            "https://www.myinstants.com/media/sounds/emotional-damage-meme.mp3" // Emotional Damage
         ]
     },
     noTexts: [
@@ -470,6 +473,11 @@ function checkAndEvade() {
 
 function handleNoClick() {
     noClickCount++;
+
+    // Stop Happy BGM immediately
+    if (bgm && !bgm.paused) {
+        bgm.pause();
+    }
 
     // Play rotating "No" sound
     if (sfx.noSequence && sfx.noSequence.length > 0 && !isMuted) {

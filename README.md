@@ -11,8 +11,10 @@
 </p>
 
 <p align="center">
-  🌸 <a href="https://sonamkhadka.github.io/ValentineAPP/" target="_blank"><b>Live Demo</b></a> 🌸
+  🌸 <a href="#"><b>Live Demo</b></a> 🌸
 </p>
+
+<!-- Update the above link with your custom domain once deployed -->
 
 ---
 
@@ -40,8 +42,50 @@
 ### For Users (Send to Your Valentine)
 
 **Option 1: GitHub Pages (Recommended)**
-1. Visit the [live demo](https://sonamkhadka.github.io/ValentineAPP/)
-2. Or fork this repo and enable GitHub Pages in Settings
+
+This app is deployed using GitHub Pages. You can:
+
+1. Visit the live demo at your custom domain
+2. Or fork this repo and set up your own deployment
+
+<details>
+<summary><b>🔧 Setting Up GitHub Pages with Custom Domain</b></summary>
+
+1. Fork this repository
+2. Go to **Settings** → **Pages**
+3. Under "Build and deployment", select `main` branch as Source
+4. Under "Custom domain", enter your domain (e.g., `valentine.yourdomain.com`)
+5. Save and wait for DNS check to complete
+6. Add a `CNAME` file in your repo root with your domain:
+   ```
+   valentine.yourdomain.com
+   ```
+7. Configure DNS with your domain provider:
+   - **For apex domain** (`yourdomain.com`): Add A records pointing to GitHub Pages IPs
+   - **For subdomain** (`valentine.yourdomain.com`): Add CNAME record pointing to `yourusername.github.io`
+
+See [GitHub's custom domain docs](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site) for detailed instructions.
+</details>
+
+<details>
+<summary><b>🔄 Switching Back to Default github.io Domain</b></summary>
+
+If you previously set up a custom domain and want to use the default `github.io` URL:
+
+1. Go to **Settings** → **Pages**
+2. Remove the custom domain from the "Custom domain" field
+3. Save (uncheck "Enforce HTTPS" if needed, then re-enable after)
+4. Delete or rename the `CNAME` file in your repository:
+   ```bash
+   git rm CNAME
+   git commit -m "Remove custom domain"
+   git push
+   ```
+5. Wait a few minutes for changes to propagate
+6. Your site will be available at: `https://sonamkhadka.github.io/ValentineAPP/`
+
+> ⚠️ DNS changes may take up to 24 hours to fully propagate.
+</details>
 
 **Option 2: Local File**
 1. Download this repository as ZIP
@@ -158,7 +202,9 @@ ValentineApp/
 ├── style.css       # All styling and animations
 ├── script.js       # Game logic and interactions
 ├── README.md       # This file
-└── LICENSE         # MIT License
+├── LICENSE         # MIT License
+├── .gitignore      # Git ignore rules
+└── CNAME           # Custom domain configuration (optional)
 ```
 
 ---
@@ -209,12 +255,38 @@ This project is licensed under the [MIT License](LICENSE) - feel free to use it 
 
 ---
 
-## 🙏 Credits
+## 🙏 Credits & Attributions
 
-- GIFs powered by [Giphy](https://giphy.com)
-- Audio from [Pixabay](https://pixabay.com)
-- Confetti effect by [canvas-confetti](https://github.com/catdad/canvas-confetti)
-- Fonts from [Google Fonts](https://fonts.google.com)
+### GIFs
+All GIFs are sourced from [Giphy](https://giphy.com) and are used for entertainment purposes:
+
+| GIF | Source |
+|-----|--------|
+| Happy Cat | [Giphy - Happy Happy Happy Cat](https://giphy.com/gifs/T70hpBP1L0N7U0jtkq) |
+| Excited | [Giphy - Excited](https://giphy.com/gifs/12hvzkZSFkAsiS) |
+| Shocked Eyes | [Giphy - Shocked](https://giphy.com/gifs/FY8c5SKwiNf1EtZKGs) |
+| Confused Girl | [Giphy - Confused](https://giphy.com/gifs/ji6zzUZwNIuLS) |
+| Celebration Kiss | [Giphy - Kiss You Love](https://giphy.com/gifs/xR5cPyPoL5HVXSphqA) |
+| Sad Sequence GIFs | Various from [Giphy](https://giphy.com) |
+| Boot/Security GIFs | Various from [Giphy](https://giphy.com) |
+
+### Sound Effects
+All audio is sourced from [Pixabay](https://pixabay.com) (free for commercial use):
+
+| Sound | Source |
+|-------|--------|
+| Background Music (Lofi) | [Pixabay - Cute Lofi](https://cdn.pixabay.com/download/audio/2022/10/25/audio_4f61c958a5.mp3) |
+| Pop Sound | [Pixabay - Pop](https://cdn.pixabay.com/download/audio/2022/03/15/audio_29107954b0.mp3) |
+| Error/Deny Sound | [Pixabay - Error](https://cdn.pixabay.com/download/audio/2021/08/04/audio_12b0c7443c.mp3) |
+| Success Sound | [Pixabay - Success](https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3) |
+| Hover/Tick Sound | [Pixabay - Soft Tick](https://cdn.pixabay.com/download/audio/2022/03/24/audio_804e9c73b6.mp3) |
+
+### Other Resources
+- **Confetti effect** by [canvas-confetti](https://github.com/catdad/canvas-confetti)
+- **Fonts** from [Google Fonts](https://fonts.google.com) (Nunito, Outfit, Courier Prime, Pacifico)
+- **Placeholder Images** from [LoremFlickr](https://loremflickr.com)
+
+> ⚠️ **Note**: All third-party media is used under their respective licenses. If you're the creator of any content used here and want it removed, please open an issue.
 
 ---
 
