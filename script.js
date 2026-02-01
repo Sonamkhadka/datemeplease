@@ -103,8 +103,8 @@ let mouseY = 0;
 let noBtnElement = null;
 let isEvasive = false;
 
-// Audio State
-let isMuted = true;
+// Audio State - ON by default
+let isMuted = false;
 let bgm = null;
 let sfx = {};
 
@@ -122,10 +122,22 @@ const screens = {
 /* --- INITIALIZATION --- */
 document.addEventListener('DOMContentLoaded', () => {
     createFloatingHearts();
-    setupAudio(); // Initialize Audio
+    setupAudio(); // Initialize Audio (ON by default)
     startBootSequence();
     setupNoButtonEvasion();
     preloadImages(); // Start loading images
+    
+    // Enable audio on first user interaction (browser autoplay policy)
+    const enableAudio = () => {
+        if (!isMuted && bgm && bgm.paused) {
+            bgm.play().catch(e => console.log("Audio play failed:", e));
+        }
+        // Remove listeners after first interaction
+        document.removeEventListener('click', enableAudio);
+        document.removeEventListener('touchstart', enableAudio);
+    };
+    document.addEventListener('click', enableAudio);
+    document.addEventListener('touchstart', enableAudio);
 });
 
 // Preload images to prevent lag
@@ -238,6 +250,14 @@ function switchScreen(hideId, showId) {
 // 1. BOOT SEQUENCE - Cute pink edition
 async function startBootSequence() {
     const logContainer = document.getElementById('boot-log');
+
+    // Try to auto-play music (browsers may block until interaction)
+    if (!isMuted && bgm) {
+        bgm.play().catch(() => {
+            // Browser blocked autoplay - will enable on first click
+            console.log('Music will start on first interaction');
+        });
+    }
 
     for (let log of config.bootLogs) {
         const p = document.createElement('p');
