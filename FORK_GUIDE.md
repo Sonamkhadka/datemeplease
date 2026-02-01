@@ -39,7 +39,8 @@ Want to create your own DateMePlease proposal? Here's the fastest way!
 3. Commit changes
 
 ### Step 4: Get Your Link
-- Your site will be at: `https://YOURUSERNAME.github.io/ValentineAPP/`
+- Your site will be at: `https://sonamkhadka.github.io/ValentineAPP/`
+- (Replace `sonamkhadka` with your GitHub username)
 
 ### Optional: Use a Custom Domain (e.g., datemeplease.com.au)
 If you bought a domain, follow these exact steps to avoid errors:
@@ -52,7 +53,7 @@ If you bought a domain, follow these exact steps to avoid errors:
 2. **In Your Domain Provider (Cloudflare, GoDaddy, etc.):**
    - Add a **CNAME** record:
      - Name: `www`
-     - Content: `YOURUSERNAME.github.io`
+     - Content: `YOURUSERNAME.github.io` (replace with your username)
    - Add four **A** records for the root domain (`@`):
      - `185.199.108.153`
      - `185.199.109.153`
