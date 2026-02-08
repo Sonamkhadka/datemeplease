@@ -202,9 +202,12 @@ body {
     inset: 0;
     z-index: 12000;
     display: none;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 20px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
 .builder-modal.active {
@@ -222,8 +225,11 @@ body {
     position: relative;
     z-index: 2;
     width: min(680px, 96vw);
-    max-height: min(92vh, 860px);
+    max-height: min(calc(100dvh - 40px), 860px);
     overflow-y: auto;
+    overflow-x: hidden;
+    margin: auto 0;
+    min-height: 0;
     border: 2px solid rgba(255, 105, 180, 0.25);
     background: rgba(255, 255, 255, 0.97);
 }
@@ -2418,7 +2424,7 @@ body {
 
     .builder-card {
         width: 100%;
-        max-height: 95vh;
+        max-height: calc(100dvh - 20px);
         padding: 1rem;
     }
 
