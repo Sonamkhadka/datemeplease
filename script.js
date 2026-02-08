@@ -120,7 +120,13 @@ const config = {
                 "{to}, don't break this dramatic rom-com scene 💔",
                 "I already rehearsed my happy dance for your YES 🕺",
                 "If you say YES, I promise snacks and zero chaos 🍫",
-                "Come on {to}, let's make this official 💌"
+                "Come on {to}, let's make this official 💌",
+                "My lawyer says this is a legally cute proposal.",
+                "Saying YES boosts your luck by 300% ✨",
+                "Emergency alert: {from} is being adorable again 🚨",
+                "Plot twist: the No button is unionizing.",
+                "Say YES and I will share my fries. All of them. 🍟",
+                "You, me, and a suspicious amount of dessert?"
             ],
             emotional: [
                 "{to}, will you be my Valentine?",
@@ -128,7 +134,13 @@ const config = {
                 "My favorite place is wherever you are, {to}.",
                 "I want more memories with you, one day at a time.",
                 "You matter to me more than I can explain.",
-                "Say YES, and let's keep choosing each other. 💗"
+                "Say YES, and let's keep choosing each other. 💗",
+                "You make my heart feel seen.",
+                "With you, I feel peaceful and brave.",
+                "I love who I am when I am with you.",
+                "You are my comfort and my favorite adventure.",
+                "I still smile when your name appears on my phone.",
+                "I want to keep building this beautiful us."
             ],
             mixed: [
                 "{to}, will you be my Valentine?",
@@ -136,7 +148,13 @@ const config = {
                 "Life feels softer with you in it.",
                 "Say YES and I'll bring dessert plus emotional support 🍰",
                 "I really, really like you, {to}.",
-                "Let's make this a cute love story together."
+                "Let's make this a cute love story together.",
+                "I can offer jokes, loyalty, and top-tier hugs.",
+                "You are my calm place and my chaos partner.",
+                "If you say YES, I will celebrate like a cartoon villain (happy one).",
+                "My heart picked you. No second choice.",
+                "This is me being brave and a little dramatic 🎭",
+                "Say YES and let's romanticize everything."
             ]
         },
         subtitles: {
@@ -146,7 +164,11 @@ const config = {
                 "(no pressure... okay maybe a little 🥺)",
                 "(I can be charming after coffee, promise ☕)",
                 "(I already told my playlist about us 🎵)",
-                "(last call for romance mode 💘)"
+                "(last call for romance mode 💘)",
+                "(my delulu says we are meant to be)",
+                "(fine, I am bribing you with snacks 🍪)",
+                "(our rom-com budget is now live)",
+                "(my heart filed a formal complaint 💌)"
             ],
             emotional: [
                 "(from {from}, with all my heart 💗)",
@@ -154,7 +176,11 @@ const config = {
                 "(I don't want to imagine life without you)",
                 "(thank you for being you)",
                 "(I mean every word)",
-                "(please choose us 💞)"
+                "(please choose us 💞)",
+                "(you are my favorite peace)",
+                "(you make hard days lighter)",
+                "(my heart feels safe with you)",
+                "(I am all in, sincerely)"
             ],
             mixed: [
                 "(from {from}, please say yes... 🥺💕)",
@@ -162,7 +188,11 @@ const config = {
                 "(you make me smile for no reason)",
                 "(I promise to be worth it 💖)",
                 "(this is me being brave for you)",
-                "(say yes and let's celebrate 🎉)"
+                "(say yes and let's celebrate 🎉)",
+                "(I brought feelings and funny lines)",
+                "(we look good in the same story)",
+                "(soft heart, loud excitement 💫)",
+                "(I really like us)"
             ]
         },
         popupMessages: {
@@ -171,21 +201,27 @@ const config = {
                 "Breaking news: {from} has a massive crush.",
                 "You + me + snacks = elite combo 🍿",
                 "If love was homework, I'd still pick you.",
-                "Petition to make us official starts now ✍️"
+                "Petition to make us official starts now ✍️",
+                "No refunds: you are already my favorite person.",
+                "You're the plot. Everyone else is side quest."
             ],
             emotional: [
                 "You are my calm in loud days, {to}.",
                 "You make my heart feel understood.",
                 "I feel lucky every time I think of you.",
                 "Thank you for being part of my world.",
-                "With you, love feels peaceful and real."
+                "With you, love feels peaceful and real.",
+                "Your smile is my daily reset.",
+                "You are worth all my courage, {to}."
             ],
             mixed: [
                 "You make my heart do happy cartwheels, {to}.",
                 "I'd choose you in every timeline 💫",
                 "{from} + {to} sounds right to me.",
                 "You're my favorite person to laugh with.",
-                "Let's turn this into our favorite memory."
+                "Let's turn this into our favorite memory.",
+                "Warning: this crush is now enterprise-grade.",
+                "You feel like sunshine and inside jokes."
             ]
         },
         successNotes: {
@@ -217,6 +253,7 @@ let sfx = {};
 let personalization = { ...config.personalizationDefaults };
 let popupTimers = [];
 let activeShareLink = '';
+let lastNoGifIndex = -1;
 let shownStorySteps = new Set();
 let storyHideTimer = null;
 const appMode = {
@@ -266,14 +303,12 @@ function sanitizePhone(value, fallback) {
 }
 
 function sanitizeTone(value, fallback) {
-    if (typeof value !== 'string') return fallback;
-    const tone = value.trim().toLowerCase();
+    const tone = String(value || '').trim().toLowerCase();
     return validTones.has(tone) ? tone : fallback;
 }
 
 function sanitizeStoryStep(value, fallback) {
-    if (typeof value !== 'string') return fallback;
-    const step = value.trim().toLowerCase();
+    const step = String(value || '').trim().toLowerCase();
     return validStorySteps.has(step) ? step : fallback;
 }
 
@@ -314,6 +349,13 @@ function pickMessageAt(messages, index, fallbackMessages) {
     const source = Array.isArray(messages) && messages.length ? messages : (fallbackMessages || []);
     if (!source.length) return '';
     const safeIndex = Math.min(index, source.length - 1);
+    return source[safeIndex];
+}
+
+function pickMessageLoop(messages, index, fallbackMessages) {
+    const source = Array.isArray(messages) && messages.length ? messages : (fallbackMessages || []);
+    if (!source.length) return '';
+    const safeIndex = ((index % source.length) + source.length) % source.length;
     return source[safeIndex];
 }
 
@@ -378,7 +420,7 @@ function setText(id, value) {
 
 function updateQuestionCopy(questionIndex) {
     const fallbackQuestions = config.questionVariations;
-    const questionTemplate = pickMessageAt(
+    const questionTemplate = pickMessageLoop(
         getToneMessages('questionVariations', fallbackQuestions),
         questionIndex,
         fallbackQuestions
@@ -404,7 +446,7 @@ function updateSubtitleCopy(subtitleIndex) {
         "(my heart is breaking... 😭)",
         "(I'll do anything! 🙏)"
     ];
-    const subtitleTemplate = pickMessageAt(
+    const subtitleTemplate = pickMessageLoop(
         getToneMessages('subtitles', fallbackSubtitles),
         subtitleIndex,
         fallbackSubtitles
@@ -443,13 +485,27 @@ function queueQuestionPopups() {
     const maxPopups = Math.min(4, popupTemplates.length);
     if (!maxPopups) return;
 
+    const pool = [...popupTemplates];
     for (let i = 0; i < maxPopups; i++) {
-        const popupTemplate = popupTemplates[i];
+        const randomIndex = Math.floor(Math.random() * pool.length);
+        const popupTemplate = pool.splice(randomIndex, 1)[0];
         const timerId = setTimeout(() => {
             showLovePopup(renderTemplate(popupTemplate), i);
         }, 1100 + (i * 2500));
         popupTimers.push(timerId);
     }
+}
+
+function getStoryStepLabel(step) {
+    const labels = {
+        '1': 'Step 1 (Security screen)',
+        '2': 'Step 2 (Captcha screen)',
+        '3': 'Step 3 (Question appears)',
+        '4': 'Step 4 (After 3 No clicks)',
+        '5': 'Step 5 (BSOD screen)',
+        '6': 'Step 6 (Success celebration)'
+    };
+    return labels[step] || '';
 }
 
 function closeStoryNote() {
@@ -529,6 +585,7 @@ function maybeShowStoryAtStep(step) {
 function resetStoryStepTracking() {
     shownStorySteps = new Set();
     closeStoryNote();
+    lastNoGifIndex = -1;
 }
 
 function applyPersonalizationToUI() {
@@ -647,7 +704,10 @@ function setupBuilder() {
     if (appMode.builder) {
         openBuilderModal();
         activeShareLink = buildShareUrl(personalization);
-        setShareLinkResult(activeShareLink, 'Share this link. It opens directly in receiver mode.');
+        const storyHint = personalization.storyMessage && personalization.storyStep !== 'none'
+            ? ` Paragraph set for ${getStoryStepLabel(personalization.storyStep)}.`
+            : '';
+        setShareLinkResult(activeShareLink, `Share this link. It opens directly in receiver mode.${storyHint}`);
     }
 
     openBtn.addEventListener('click', () => {
@@ -668,7 +728,10 @@ function setupBuilder() {
         applyPersonalizationToUI();
 
         activeShareLink = buildShareUrl(personalization);
-        setShareLinkResult(activeShareLink, 'Link generated. Copy it and share.');
+        const storyHint = personalization.storyMessage && personalization.storyStep !== 'none'
+            ? ` Paragraph will show at ${getStoryStepLabel(personalization.storyStep)}.`
+            : '';
+        setShareLinkResult(activeShareLink, `Link generated. Copy it and share.${storyHint}`);
 
         if (screens.question.classList.contains('active')) {
             queueQuestionPopups();
@@ -957,6 +1020,7 @@ function initQuestionScreen() {
     // Set initial GIF
     const mainGif = document.getElementById('main-gif');
     mainGif.src = config.gifs.happy;
+    lastNoGifIndex = -1;
 
     updateQuestionCopy(0);
     updateSubtitleCopy(0);
@@ -1116,7 +1180,7 @@ function handleNoClick() {
 
     // 1. Change the QUESTION text (not the button!)
     updateQuestionCopy(noClickCount - 1);
-    const subtitleIndex = Math.min(Math.floor(noClickCount / 2), 5);
+    const subtitleIndex = Math.floor(noClickCount / 2);
     updateSubtitleCopy(subtitleIndex);
 
     // 2. Grow Yes Button (keep button text simple)
@@ -1133,30 +1197,33 @@ function handleNoClick() {
 
     // 3. Change GIF sequentially based on noClickCount
     let gifIndex;
-    if (noClickCount <= config.gifs.noSequence.length) {
+    const totalNoGifs = config.gifs.noSequence.length;
+    if (noClickCount <= totalNoGifs) {
         gifIndex = noClickCount - 1;
     } else {
-        // If we run out of sequential GIFs, loop through the last 4 to keep it dynamic
-        const cycleLength = 4;
-        const availableGifs = config.gifs.noSequence.length;
-        // Use modulo to cycle
-        const offset = (noClickCount - availableGifs - 1) % cycleLength;
-        // Pick from the last 'cycleLength' items
-        gifIndex = availableGifs - cycleLength + offset;
+        // After the first full pass, pick randomly without immediate repeats.
+        const candidates = [];
+        for (let i = 0; i < totalNoGifs; i++) {
+            if (i !== lastNoGifIndex) candidates.push(i);
+        }
+        const randomSlot = Math.floor(Math.random() * candidates.length);
+        gifIndex = candidates[randomSlot];
     }
 
     // Ensure index is valid
-    if (gifIndex >= 0 && gifIndex < config.gifs.noSequence.length) {
+    if (gifIndex >= 0 && gifIndex < totalNoGifs) {
         mainGif.src = config.gifs.noSequence[gifIndex];
+        lastNoGifIndex = gifIndex;
     } else {
         mainGif.src = config.gifs.sad; // Fallback
+        lastNoGifIndex = -1;
     }
 
     if (noClickCount === 5) {
         showEvasionWarning();
     }
 
-    if (noClickCount === 3) {
+    if (noClickCount >= 3) {
         maybeShowStoryAtStep('4');
     }
 
@@ -1241,7 +1308,7 @@ document.getElementById('reboot-btn').addEventListener('click', () => {
     }
 
     updateQuestionCopy(noClickCount - 1);
-    updateSubtitleCopy(Math.min(Math.floor(noClickCount / 2), 5));
+    updateSubtitleCopy(Math.floor(noClickCount / 2));
     queueQuestionPopups();
 
     // Show a hopeful GIF
